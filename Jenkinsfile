@@ -55,7 +55,7 @@ pipeline {
             }
         }
         stage('blackduck') {
-               steps{
+               steps {
                 synopsys_detect detectProperties: '', downloadStrategyOverride: [$class: 'ScriptOrJarDownloadStrategy']
                }
         }
@@ -64,7 +64,7 @@ pipeline {
                 sh 'mkdir /tmp/polaris'
                 sh 'printenv | grep POLARIS'
                 sh 'echo $POLARIS_HOME'
-                polaris arguments: 'analyze -w', polarisCli: 'P3'
+                polaris arguments: 'analyze -w', polarisCli: 'sipse'
             }
         }
         stage('codedx') {
