@@ -28,9 +28,9 @@ pipeline {
         stage('Run Java Sec Code with Seeker Agent') {
             steps {
                 // DL seeker agent
-                sh "wget --no-check-certificate --content-disposition \'http://ip-172-31-14-226:8088/rest/api/latest/installers/agents/binaries/JAVA?agentVersion=2022.1.0&flavor=JAR\'"
+                sh "wget --no-check-certificate --content-disposition \'http://ip-172-31-32-101:8088/rest/api/latest/installers/agents/binaries/JAVA?agentVersion=2022.1.0&flavor=JAR\'"
                 // instrumented w/seeker agent
-                sh 'nohup java -javaagent:./seeker-agent.jar  -Dseeker.project.key=java-sec-code -Dseeker.server.url=http://ip-172-31-14-226:8088 -jar target/java-sec-code-1.0.0.jar --server.port=9999 > jsc.out 2>&1 &'
+                sh 'nohup java -javaagent:./seeker-agent.jar  -Dseeker.project.key=java-sec-code -Dseeker.server.url=http://ip-172-31-32-101:8088 -jar target/java-sec-code-1.0.0.jar --server.port=9999 > jsc.out 2>&1 &'
                 // DEBUG - no seeker agent
                 //sh 'nohup java -jar target/java-sec-code-1.0.0.jar --server.port=9999 > jsc.out 2>&1 &'
                 sh 'ps auxw | grep java-sec-code'
