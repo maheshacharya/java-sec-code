@@ -71,7 +71,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'CODEDXAPI', variable: 'codedxapi')]) {
                     // code dx project key is 1
-                    sh "curl -X \'POST\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H \'API-Key: $CODEDXAPI\' http://ip-172-31-14-226:8080/codedx/api/projects/1/analysis"
+                    sh "curl -X \'POST\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H \'API-Key: $CODEDXAPI\' http://ip-172-31-32-101:8080/codedx/api/projects/1/analysis"
                 }
             }
         }
