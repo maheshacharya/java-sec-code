@@ -18,7 +18,6 @@ pipeline {
         stage('Build') {
             steps {
                 sh "AWS_HOST = `curl -s http://169.254.169.254/latest/meta-data/local-hostname`"
-                sh "echo My hostname is: ${AWS_HOST}"
                 sh 'echo $AWS_HOST'
                 sh "hostname"
 
