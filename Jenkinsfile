@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         POLARIS_HOME = '/tmp/polaris'
+        AWS_HOST = "${sh(script:'curl -s http://169.254.169.254/latest/meta-data/local-hostname', returnStdout: true).trim()}"
     }
 
     tools {
@@ -17,9 +18,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh "AWS_HOST = `curl -s http://169.254.169.254/latest/meta-data/local-hostname`"
-                sh 'echo $AWS_HOST'
-                sh "hostname"
+                echo "HOST = ${env.AWS_HOST}"
 
                 // Get some code from a GitHub repository
                 git 'https://github.com/maheshacharya/java-sec-code.git'
