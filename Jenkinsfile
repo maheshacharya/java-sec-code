@@ -17,6 +17,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                sh "echo My hostname is: ${HOSTNAME}"
+                sh "hostname"
+
                 // Get some code from a GitHub repository
                 git 'https://github.com/maheshacharya/java-sec-code.git'
 
