@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         POLARIS_HOME = '/tmp/polaris'
+        AWS_HOST = `curl -s http://169.254.169.254/latest/meta-data/local-hostname`
     }
 
     tools {
@@ -17,7 +18,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh "echo My hostname is: ${HOSTNAME}"
+                sh "echo My hostname is: ${AWS_HOST}"
+                sh 'echo $AWS_HOST'
                 sh "hostname"
 
                 // Get some code from a GitHub repository
