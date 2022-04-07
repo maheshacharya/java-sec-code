@@ -29,12 +29,13 @@ pipeline {
             }
         }
 
-        stage('Download Coverity tools') {
-            steps {
-                sh "curl 'http://$AWS_HOST:8000/downloadFile.htm?fn=cov-analysis-linux64-2021.12.0.tar.gz' -u committer:password --output cov-analysis-linux64-2021.12.0.tar.gz"
-                sh "tar -xf cov-analysis-linux64-2021.12.0.tar.gz"
-            }
-        }
+        // TODO just DL this stuff on the fly from Polaris
+        //stage('Download Coverity tools') {
+        //    steps {
+        //        sh "curl -fLsS 'http://$AWS_HOST:8000/downloadFile.htm?fn=cov-analysis-linux64-2021.12.0.tar.gz' -u committer:password --output cov-analysis-linux64-2021.12.0.tar.gz"
+        //        sh "tar -xf cov-analysis-linux64-2021.12.0.tar.gz"
+        //    }
+        //}
 
         //stage('Coverity Capture') {
         //    sh "$COVBIN/cov-build --dir $IDIR --fs-capture-search $WORKSPACE mvn -B package -DskipTests"
