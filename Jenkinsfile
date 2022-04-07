@@ -31,7 +31,7 @@ pipeline {
 
         stage('Download Coverity tools') {
             steps {
-                sh "curl '$AWS_HOST:8000/downloadFile.htm?fn=cov-analysis-linux64-2021.12.0.tar.gz' -u committer:password --output cov-analysis-linux64-2021.12.0.tar.gz"
+                sh "curl 'http://$AWS_HOST:8000/downloadFile.htm?fn=cov-analysis-linux64-2021.12.0.tar.gz' -u committer:password --output cov-analysis-linux64-2021.12.0.tar.gz"
                 sh "tar -xf cov-analysis-linux64-2021.12.0.tar.gz"
             }
         }
