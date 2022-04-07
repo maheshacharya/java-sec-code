@@ -28,6 +28,23 @@ pipeline {
     
             }
         }
+
+        stage('Download Coverity tools') {
+            sh "curl '$AWS_HOST:8000/downloadFile.htm?fn=cov-analysis-linux64-2021.12.0.tar.gz' -u committer:password --output cov-analysis-linux64-2021.12.0.tar.gz"
+            sh "tar -xf cov-analysis-linux64-2021.12.0.tar.gz"
+        }
+
+        //stage('Coverity Capture') {
+        //    sh "$COVBIN/cov-build --dir $IDIR --fs-capture-search $WORKSPACE mvn -B package -DskipTests"
+        //}
+
+        //stage('Coverity Commit') {
+        //    steps {
+        //        withCredentials([string(credentialsId: 'COVAUTHKEY', variable: 'covauthkey')]) {
+        //        }
+        //    }
+        //}
+
         stage('Run Java Sec Code with Seeker Agent') {
             steps {
                 // DL seeker agent
