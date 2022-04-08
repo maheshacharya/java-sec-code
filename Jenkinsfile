@@ -23,7 +23,7 @@ pipeline {
                     // update the Hub connector IP
                     sh "curl -X \'PUT\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H \'API-Key: $CODEDXAPI\' http://$AWS_HOST:8080/codedx/x/tool-connector-config/values/5 --data-raw \'{\"server_url\":\"https://$PUBLIC_HOST\",\"auth_type\":\"api_token\",\"security_risks\":true,\"license_risks\":true,\"operational_risks\":false,\"minimum_severity\":\"info\",\"matched_files\":true,\"upgrade_guidance\":true,\"bom_custom_fields\":false,\"comp_custom_fields\":false,\"comp_ver_custom_fields\":false,\"auto-refresh-interval\":false,\"available-during-analysis\":true,\"api_key\":{\"remembered\":true},\"project\":\"b9367623-6340-40c9-9422-4115f184b29c\",\"version\":\"831498c4-8c1a-42bb-914e-cc30af58bd51\"}'"
                     // update Seeker connector IP
-                    sh "curl -X \'PUT\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H \'API-Key: $CODEDXAPI\' http://$AWS_HOST:8080/codedx/x/tool-connector-config/values/6 --data-raw \'{\'host_url\':\'http://TESTDEBUG$AWS_HOST:8088\',\'auto-refresh-interval\':false,\'available-during-analysis\':true,\'access_token\':{\'remembered\':true},\'selected_project\':\'java-sec-code\'}\'"
+                    sh "curl -X \'PUT\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H \'API-Key: $CODEDXAPI\' http://$AWS_HOST:8080/codedx/x/tool-connector-config/values/6 --data-raw \'{\'host_url\':\"http://TESTDEBUG$AWS_HOST:8088\",\"auto-refresh-interval\":false,\"available-during-analysis\":true,\"access_token\":{\"remembered\":true},\"selected_project\":\"java-sec-code\"}'"
                 }
             }
         }
