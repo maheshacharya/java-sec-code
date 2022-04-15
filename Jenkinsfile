@@ -74,7 +74,9 @@ pipeline {
         stage('bbdba') {
             steps {
                 withCredentials([string(credentialsId: 'BDBAAPI', variable: 'bdbaapi')]) {
-                    sh "curl -H \'Authorization: Bearer ${BDBAAPI}\' -T target/java-sec-code-1.0.0.jar https://protecode-sc.com/api/upload/"
+                    sh '''
+                      curl -H "Authorization: Bearer $BDBAAPI" -T target/java-sec-code-1.0.0.jar https://protecode-sc.com/api/upload/
+                    '''
                 }
             }
         }
