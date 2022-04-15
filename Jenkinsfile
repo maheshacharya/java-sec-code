@@ -17,7 +17,7 @@ pipeline {
     }
 
     stages {
-        stage('codedx') {
+        stage('codedxtest') {
             steps {
                 withEnv(["AWS=${AWS_HOST}", "PUBLIC=${PUBLIC_HOST}"]) {
                     withCredentials([string(credentialsId: 'CODEDXAPI', variable: 'token')]) {
