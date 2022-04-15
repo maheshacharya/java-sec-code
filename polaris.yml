@@ -13,6 +13,12 @@ capture:
     - shell: [mvn, -B, -f, pom.xml, install]
 analyze:
   mode: central
+  coverity:
+      caching:
+          jars: disable
+          tu-caching: disable
+          rws: disable
+          pfi: disable
 install:
   coverity:
     version: default
