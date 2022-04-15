@@ -21,6 +21,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'POLARISTOKEN', variable: 'token')]) {
                     sh '''
+                      apt-get install jq
                       POLURL='https://sipse.polaris.synopsys.com'
                       COV_VERSION='2021.12.1'
                       jwt=$(curl -X POST $POLURL/api/auth/v1/authenticate -H 'Accept: application/json' -H 'Content-Type: application/x-www-form-urlencoded' -d accesstoken=$token | jq -r .jwt)
