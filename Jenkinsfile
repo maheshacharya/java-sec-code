@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         POLARIS_HOME = '/tmp/polaris'
+        POLARIS_ACCESS_TOKEN = 'breakme'
         AWS_HOST = "${sh(script:'curl -s http://169.254.169.254/latest/meta-data/local-hostname', returnStdout: true).trim()}"
         PUBLIC_HOST = "${sh(script:'curl -s http://169.254.169.254/latest/meta-data/public-hostname', returnStdout: true).trim()}"
     }
@@ -112,6 +113,7 @@ pipeline {
                 sh 'mkdir /tmp/polaris'
                 sh 'printenv | grep POLARIS'
                 sh 'echo $POLARIS_HOME'
+                sh 'echo $POLARIS_ACCESS_TOKEN'
                 polaris arguments: 'analyze -w', polarisCli: 'sipse'
             }
         }
