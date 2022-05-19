@@ -7,7 +7,6 @@ pipeline {
 
     environment {
         POLARIS_HOME = '/tmp/polaris'
-        POLARIS_ACCESS_TOKEN = 'breakme'
         AWS_HOST = "${sh(script:'curl -s http://169.254.169.254/latest/meta-data/local-hostname', returnStdout: true).trim()}"
         PUBLIC_HOST = "${sh(script:'curl -s http://169.254.169.254/latest/meta-data/public-hostname', returnStdout: true).trim()}"
     }
@@ -18,28 +17,6 @@ pipeline {
     }
 
     stages {
-        //stage('Download Coverity From Polaris') {
-        //    steps {
-        //        withCredentials([string(credentialsId: 'POLARISTOKEN', variable: 'token')]) {
-        //            sh '''
-        //              POLURL='https://sipse.polaris.synopsys.com'
-        //              COV_VERSION='2021.12.1'
-        //              jwt=$(curl -X POST $POLURL/api/auth/v1/authenticate -H 'Accept: application/json' -H 'Content-Type: application/x-www-form-urlencoded' -d accesstoken=$token | jq -r .jwt)
-        //              dlinfo=$(curl -X GET "$POLURL/api/tools/v2/tools/cov_analysis:$COV_VERSION/download-descriptor-linux64" -H "accept: application/vnd.api+json"  -H 'Content-Type: application/x-www-form-urlencoded' -H "Authorization: Bearer $jwt")
-        //              dlurl=$(echo $dlinfo | jq -r .data.attributes.url)
-        //              echo $dlurl
-        //              # get the license
-        //              curl -X GET -H "Authorization: Bearer $jwt" $POLURL/api/tools/toolLicenses/coverity/license.dat --output /tmp/license.dat
-        //              # get the installer
-        //              curl -X GET ${dlurl} -H "Authorization: Bearer $jwt" --output /tmp/cov_analysis-linux64-$COV_VERSION.sh
-        //              ls -l
-        //              # run the installer in silent mode
-        //              #/tmp/cov_analysis-win64-2021.12.1.exe -q --installation.dir="/tmp/coverity" --license.region=0 --license.type.choice=0 --license.agreement=agree --license.cov.path="/tmp/license.dat"
-        //            '''
-        //        }
-        //    }
-        //}
-
         stage('Build') {
             steps {
                 echo "HOST = ${env.AWS_HOST}"
@@ -52,26 +29,6 @@ pipeline {
     
             }
         }
-
-        // TODO just DL this stuff on the fly from Polaris
-        //stage('Download Coverity tools') {
-        //    steps {
-        //        sh "curl -fLsS 'http://$AWS_HOST:8000/downloadFile.htm?fn=cov-analysis-linux64-2021.12.0.tar.gz' -u committer:password --output cov-analysis-linux64-2021.12.0.tar.gz"
-        //        sh "tar -xf cov-analysis-linux64-2021.12.0.tar.gz"
-        //    }
-        //}
-
-        //stage('Coverity Capture') {
-        //    sh "$COVBIN/cov-build --dir $IDIR --fs-capture-search $WORKSPACE mvn -B package -DskipTests"
-        //}
-
-        //stage('Coverity Commit') {
-        //    steps {
-        //        withCredentials([string(credentialsId: 'COVAUTHKEY', variable: 'covauthkey')]) {
-        //        }
-        //    }
-        //}
-
         stage('Run Java Sec Code with Seeker Agent') {
             steps {
                 // DL seeker agent
@@ -111,9 +68,7 @@ pipeline {
         stage('polaris') {
             steps {
                 sh 'mkdir /tmp/polaris'
-                sh 'printenv | grep POLARIS'
                 sh 'echo $POLARIS_HOME'
-                sh 'echo $POLARIS_ACCESS_TOKEN'
                 polaris arguments: 'analyze -w', polarisCli: 'sipse'
             }
         }
