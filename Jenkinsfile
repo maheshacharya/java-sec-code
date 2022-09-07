@@ -62,7 +62,7 @@ pipeline {
         }
         stage('blackduck') {
                steps {
-                synopsys_detect detectProperties: '', downloadStrategyOverride: [$class: 'ScriptOrJarDownloadStrategy']
+                synopsys_detect detectProperties: '-d --logging.level.com.synopsys.integration=DEBUG', downloadStrategyOverride: [$class: 'ScriptOrJarDownloadStrategy']
                }
         }
         stage('polaris') {
