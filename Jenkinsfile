@@ -40,9 +40,9 @@ pipeline {
             steps {
                 withCoverityEnvironment(coverityInstanceUrl: "$CONNECT", projectName: "$PROJECT", streamName: "$STREAM") {
                     sh """
-                        cov-build --dir idir --fs-capture-search $WORKSPACE $BLDCMD
-                        cov-analyze --dir idir --ticker-mode none --strip-path $WORKSPACE $CHECKERS
-                        cov-commit-defects --dir idir --ticker-mode none --url $COV_URL --stream $COV_STREAM
+                        $COVERITY_TOOL_HOME/bin/cov-build --dir idir --fs-capture-search $WORKSPACE $BLDCMD
+                        $COVERITY_TOOL_HOME/bin/cov-analyze --dir idir --ticker-mode none --strip-path $WORKSPACE $CHECKERS
+                        $COVERITY_TOOL_HOME/bin/cov-commit-defects --dir idir --ticker-mode none --url $COV_URL --stream $COV_STREAM
                     """
                     script {
                         count = coverityIssueCheck viewName: 'Newly Detected Issues', returnIssueCount: true
