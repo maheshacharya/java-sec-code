@@ -42,6 +42,7 @@ pipeline {
                     sh """
                         $COVERITY_TOOL_HOME/bin/cov-configure --java 
                         $COVERITY_TOOL_HOME/bin/cov-build --dir idir $BLDCMD
+                        $COVERITY_TOOL_HOME/bin/cov-manage-emit --dir idir add-other-hosts
                         $COVERITY_TOOL_HOME/bin/cov-analyze --dir idir --ticker-mode none --strip-path $WORKSPACE $CHECKERS
                         $COVERITY_TOOL_HOME/bin/cov-commit-defects --dir idir --ticker-mode none --url $COV_URL --stream $COV_STREAM
                     """
