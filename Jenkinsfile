@@ -46,11 +46,6 @@ pipeline {
                         $COVERITY_TOOL_HOME/bin/cov-analyze --dir idir --ticker-mode none --strip-path $WORKSPACE $CHECKERS
                         $COVERITY_TOOL_HOME/bin/cov-commit-defects --dir idir --ticker-mode none --url $COV_URL --stream $COV_STREAM --auth-key-file $COV_AUTH_KEY_PATH
                     """
-                    script {
-                        count = coverityIssueCheck viewName: 'Newly Detected Issues', returnIssueCount: true
-                        if (count != 0) { unstable 'new issues detected' }
-                        count = coverityIssueCheck viewName: 'Outstanding Issues', returnIssueCount: true
-                    }
                 }
             }
         }
