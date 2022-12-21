@@ -40,6 +40,7 @@ pipeline {
             steps {
                 withCoverityEnvironment(coverityInstanceUrl: "$CONNECT", projectName: "$PROJECT", streamName: "$STREAM") {
                     sh """
+                        $COVERITY_TOOL_HOME/bin/cov-configure --java --gcc --cs --javascript 
                         $COVERITY_TOOL_HOME/bin/cov-build --dir idir --fs-capture-search $WORKSPACE $BLDCMD
                         $COVERITY_TOOL_HOME/bin/cov-analyze --dir idir --ticker-mode none --strip-path $WORKSPACE $CHECKERS
                         $COVERITY_TOOL_HOME/bin/cov-commit-defects --dir idir --ticker-mode none --url $COV_URL --stream $COV_STREAM
