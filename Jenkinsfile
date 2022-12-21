@@ -1,3 +1,10 @@
+def GIT_REPO = 'https://github.com/maheshacharya/java-sec-code'
+def BRANCH = 'master'
+def CONNECT = 'http://ip-172-31-32-101.us-east-2.compute.internal:8000'
+def PROJECT = 'java-sec-code'
+def STREAM = 'java-sec-code'
+def CHECKERS = '--webapp-security --enable-callgraph-metrics'
+def BLDCMD = 'mvn -B -f pom.xml install'
 pipeline {
     agent {
         docker {
@@ -27,6 +34,22 @@ pipeline {
                 // Run Maven on a Unix agent.
                 sh "mvn clean package -DskipTests"
     
+            }
+        }
+        stage('coverity') {
+            steps {
+                withCoverityEnvironment(coverityInstanceUrl: "$CONNECT", projectName: "$PROJECT", streamName: "$STREAM") {
+                    sh """
+                        cov-build --dir idir --fs-capture-search $WORKSPACE $BLDCMD
+                        cov-analyze --dir idir --ticker-mode none --strip-path $WORKSPACE $CHECKERS
+                        cov-commit-defects --dir idir --ticker-mode none --url $COV_URL --stream $COV_STREAM
+                    """
+                    script {
+                        count = coverityIssueCheck viewName: 'Newly Detected Issues', returnIssueCount: true
+                        if (count != 0) { unstable 'new issues detected' }
+                        count = coverityIssueCheck viewName: 'Outstanding Issues', returnIssueCount: true
+                    }
+                }
             }
         }
         stage('Run Java Sec Code with Seeker Agent') {
