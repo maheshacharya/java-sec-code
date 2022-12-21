@@ -40,6 +40,7 @@ pipeline {
             steps {
                 withCoverityEnvironment(coverityInstanceUrl: "$CONNECT", projectName: "$PROJECT", streamName: "$STREAM") {
                     sh """
+                        rm -rf idir
                         $COVERITY_TOOL_HOME/bin/cov-configure --java 
                         $COVERITY_TOOL_HOME/bin/cov-build --dir idir $BLDCMD
                         $COVERITY_TOOL_HOME/bin/cov-manage-emit --dir idir add-other-hosts
