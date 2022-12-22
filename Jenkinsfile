@@ -46,7 +46,7 @@ pipeline {
                           # works like this: DATA='string'$VARSUBST'restofstring'
 
                           # Update coverity connect IP here
-                          DATA='{\"server_url\":\"http://'$AWS'\",\"username\":\"admin\",\"ingest_all_components\":true,\"minimum_severity\":\"Info\",\"auto-refresh-interval\":false,\"available-during-analysis\":true,\"password\":{\"remembered\":true},\"selected_project\":\"java-sec-code\",\"selected_stream\":{\"value\":\"java-sec-code\",\"syncWith\":null}}'
+                          DATA='{\"server_url\":\"http://'$AWS':8000\",\"username\":\"admin\",\"ingest_all_components\":true,\"minimum_severity\":\"Info\",\"auto-refresh-interval\":false,\"available-during-analysis\":true,\"password\":{\"remembered\":true},\"selected_project\":\"java-sec-code\",\"selected_stream\":{\"value\":\"java-sec-code\",\"syncWith\":null}}'
                           curl -X \'PUT\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H "API-Key: $token" http://$AWS:8080/codedx/x/tool-connector-config/values/9 --data-raw $DATA
 
                           # update the Hub connector IP
