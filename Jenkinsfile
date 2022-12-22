@@ -36,7 +36,7 @@ pipeline {
     
             }
         }
-        stage('bbdba') {
+        stage('bbdba-debug') {
             steps {
                 withCredentials([string(credentialsId: 'BDBAAPI', variable: 'token')]) {
                     sh '''
@@ -45,7 +45,7 @@ pipeline {
                 }
             }
         }
-        stage('codedx') {
+        stage('codedx-debug') {
             steps {
                 withEnv(["AWS=${AWS_HOST}", "PUBLIC=${PUBLIC_HOST}"]) {
                     withCredentials([string(credentialsId: 'CODEDXAPI', variable: 'token')]) {
