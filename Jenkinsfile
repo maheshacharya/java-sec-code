@@ -36,34 +36,6 @@ pipeline {
     
             }
         }
-        stage('codedx-debug') {
-            steps {
-                withEnv(["AWS=${AWS_HOST}", "PUBLIC=${PUBLIC_HOST}"]) {
-                    withCredentials([string(credentialsId: 'CODEDXAPI', variable: 'token')]) {
-                        sh '''
-                          echo "$AWS"
-                          echo "$PUBLIC"
-                          # works like this: DATA='string'$VARSUBST'restofstring'
-
-                          # Update coverity connect IP here
-                          DATA='{\"server_url\":\"http://'$AWS':8000\",\"username\":\"admin\",\"ingest_all_components\":true,\"minimum_severity\":\"Info\",\"auto-refresh-interval\":false,\"available-during-analysis\":true,\"password\":{\"remembered\":true},\"selected_project\":\"java-sec-code\",\"selected_stream\":{\"value\":\"java-sec-code\",\"syncWith\":null}}'
-                          curl -X \'PUT\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H "API-Key: $token" http://$AWS:8080/codedx/x/tool-connector-config/values/9 --data-raw $DATA
-
-                          # update the Hub connector IP
-                          DATA='{\"server_url\":\"https://'$PUBLIC'\",\"auth_type\":\"api_token\",\"security_risks\":true,\"license_risks\":true,\"operational_risks\":false,\"minimum_severity\":\"info\",\"matched_files\":true,\"upgrade_guidance\":true,\"bom_custom_fields\":false,\"comp_custom_fields\":false,\"comp_ver_custom_fields\":false,\"auto-refresh-interval\":false,\"available-during-analysis\":true,\"api_key\":{\"remembered\":true},\"project\":\"b9367623-6340-40c9-9422-4115f184b29c\",\"version\":\"831498c4-8c1a-42bb-914e-cc30af58bd51\"}'
-                          curl -X \'PUT\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H "API-Key: $token" http://$AWS:8080/codedx/x/tool-connector-config/values/5 --data-raw $DATA
-
-                          # update Seeker connector IP
-                          DATA='{"host_url":"http://'$AWS':8088","auto-refresh-interval":false,"available-during-analysis":true,"access_token":{"remembered":true},"selected_project":"java-sec-code"}'
-                          curl -X \'PUT\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H "API-Key: $token" http://$AWS:8080/codedx/x/tool-connector-config/values/6 --data-raw $DATA
-
-                          # push results to codedx (java-sec-code project key is 1)
-                          curl -X \'POST\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H "API-Key: $token" http://$AWS:8080/codedx/api/projects/1/analysis
-                        '''
-                    }
-                }
-            }
-        }
         stage('coverity') {
             steps {
                 withCoverityEnvironment(coverityInstanceUrl: "$CONNECT", projectName: "$PROJECT", streamName: "$STREAM") {
@@ -113,7 +85,7 @@ pipeline {
                 synopsys_detect detectProperties: '-d --logging.level.com.synopsys.integration=DEBUG --detect.tools=DETECTOR', downloadStrategyOverride: [$class: 'ScriptOrJarDownloadStrategy']
                }
         }
-        stage('polaris') {
+        stage('oldpolaris') {
             steps {
                 sh 'mkdir /tmp/polaris'
                 sh 'echo $POLARIS_HOME'
@@ -125,12 +97,23 @@ pipeline {
                 withEnv(["AWS=${AWS_HOST}", "PUBLIC=${PUBLIC_HOST}"]) {
                     withCredentials([string(credentialsId: 'CODEDXAPI', variable: 'token')]) {
                         sh '''
-                          # TODO update coverity connect IP
+                          echo "$AWS"
+                          echo "$PUBLIC"
+                          # works like this: DATA='string'$VARSUBST'restofstring'
+
+                          # Update coverity connect IP here
+                          DATA='{\"server_url\":\"http://'$AWS':8000\",\"username\":\"admin\",\"ingest_all_components\":true,\"minimum_severity\":\"Info\",\"auto-refresh-interval\":false,\"available-during-analysis\":true,\"password\":{\"remembered\":true},\"selected_project\":\"java-sec-code\",\"selected_stream\":{\"value\":\"java-sec-code\",\"syncWith\":null}}'
+                          curl -X \'PUT\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H "API-Key: $token" http://$AWS:8080/codedx/x/tool-connector-config/values/9 --data-raw $DATA
+
                           # update the Hub connector IP
-                          curl -X \'PUT\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H "API-Key: $token" http://$AWS:8080/codedx/x/tool-connector-config/values/5 --data-raw '{\"server_url\":\"https://$PUBLIC\",\"auth_type\":\"api_token\",\"security_risks\":true,\"license_risks\":true,\"operational_risks\":false,\"minimum_severity\":\"info\",\"matched_files\":true,\"upgrade_guidance\":true,\"bom_custom_fields\":false,\"comp_custom_fields\":false,\"comp_ver_custom_fields\":false,\"auto-refresh-interval\":false,\"available-during-analysis\":true,\"api_key\":{\"remembered\":true},\"project\":\"b9367623-6340-40c9-9422-4115f184b29c\",\"version\":\"831498c4-8c1a-42bb-914e-cc30af58bd51\"}'
+                          DATA='{\"server_url\":\"https://'$PUBLIC'\",\"auth_type\":\"api_token\",\"security_risks\":true,\"license_risks\":true,\"operational_risks\":false,\"minimum_severity\":\"info\",\"matched_files\":true,\"upgrade_guidance\":true,\"bom_custom_fields\":false,\"comp_custom_fields\":false,\"comp_ver_custom_fields\":false,\"auto-refresh-interval\":false,\"available-during-analysis\":true,\"api_key\":{\"remembered\":true},\"project\":\"b9367623-6340-40c9-9422-4115f184b29c\",\"version\":\"831498c4-8c1a-42bb-914e-cc30af58bd51\"}'
+                          curl -X \'PUT\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H "API-Key: $token" http://$AWS:8080/codedx/x/tool-connector-config/values/5 --data-raw $DATA
+
                           # update Seeker connector IP
-                          curl -X \'PUT\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H "API-Key: $token" http://$AWS:8080/codedx/x/tool-connector-config/values/6 --data-raw '{\"host_url\":\"http://$AWS:8088\",\"auto-refresh-interval\":false,\"available-during-analysis\":true,\"access_token\":{\"remembered\":true},\"selected_project\":\"java-sec-code\"}'
-                          # push results to codedx (project key is 1)
+                          DATA='{"host_url":"http://'$AWS':8088","auto-refresh-interval":false,"available-during-analysis":true,"access_token":{"remembered":true},"selected_project":"java-sec-code"}'
+                          curl -X \'PUT\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H "API-Key: $token" http://$AWS:8080/codedx/x/tool-connector-config/values/6 --data-raw $DATA
+
+                          # push results to codedx (java-sec-code project key is 1)
                           curl -X \'POST\' -k -H \'accept: application/json\' -H \'Content-Type: application/json\' -H "API-Key: $token" http://$AWS:8080/codedx/api/projects/1/analysis
                         '''
                     }
